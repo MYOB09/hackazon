@@ -4,9 +4,9 @@
 		<table class="table profile-table table-striped">
 		<thead>
 			<tr>
-				<td>
-				</td>
-			</tr>
+		            <th>Field</th>
+		            <th>Value</th>
+		        </tr>
 		</thead>
 		<tbody>
 			<tr>
