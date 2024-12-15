@@ -19,7 +19,7 @@ use Symfony\Component\BrowserKit\Response;
  * Base Functional test case
  * @package App\Test
  */
-class WebTestCase extends \PHPUnit_Framework_TestCase
+class WebTestCaseTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Client
