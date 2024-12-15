@@ -26,14 +26,29 @@ if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
 }
     
 $services = json_decode($servicesStr);
-$generatorClass = $_GET['generatorClass'];
+$generatorClass = null;
+if (isset($_GET['generatorClass'])) {
+    
+    $allowedGenerators = ['ValidGenerator1', 'ValidGenerator2', 'ValidGenerator3']; 
+    $generatorClass = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['generatorClass']); 
+
+    if (!in_array($generatorClass, $allowedGenerators)) {
+        die('Invalid generator class');
+    }
+} else {
+    die('Generator class not provided');
+}
 $generatorManager = new Amfphp_BackOffice_ClientGenerator_GeneratorManager();
 $generators = $generatorManager->loadGenerators(array('ClientGenerator/Generators'));
+
+if (!isset($generators[$generatorClass])) {
+    die('Generator not found');
+}
 
 $config = new Amfphp_BackOffice_Config();
 
 $generator = $generators[$generatorClass];
-$newFolderName = date("Ymd-his-") . $generatorClass;
+$newFolderName = date("Ymd-His") . '-' . $generatorClass;
 //temp for testing. 
 //$newFolderName = $generatorClass;
 $genRootRelativeUrl = 'ClientGenerator/Generated/';
