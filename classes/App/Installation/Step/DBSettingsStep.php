@@ -67,8 +67,9 @@ class DBSettingsStep extends AbstractStep
             // Try to connect
             $conn = new \PDO($dsn, $this->user, $this->password);
 
-            $stmt = $conn->query('USE `'.$this->db.'`');
-
+            $stmt = $conn->prepare('USE ?');
+            $stmt->bind_param('s', $this->db);
+            $stmt->execute();
             if (!$stmt || $stmt->errorCode() > 0) {
                 if ($this->createIfNotExists) {
                     $stmt = $conn->query("CREATE DATABASE `".$this->db."` COLLATE 'utf8_general_ci'");
