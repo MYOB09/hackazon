@@ -86,7 +86,7 @@ abstract class Twitter extends Controller {
             $this->error($display_mode);
         }
 
-        $state = md5(uniqid(rand(), true));
+        $state = bin2hex(random_bytes(16));
         $timestamp = time();
 
         if (!empty($_GET['oauth_token']) && !empty($_GET['oauth_verifier'])){
