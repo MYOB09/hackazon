@@ -261,87 +261,66 @@ class CRUDController extends Controller
      * Prepares field meta information in a canonical form.
      * @return array
      */
-    protected function prepareListFields()
-    {
-        $listFields = $this->getListFields();
+protected function prepareListFields()
+{
+    $listFields = $this->getListFields();
+    $result = [];
 
-        $result = [];
-        foreach ($listFields as $field => &$data) {
-            if (is_numeric($field) && is_string($data)) {
-                $field = $data;
-                $data = [];
-            }
-
-            $data['original_field_name'] = $field;
-
-            if (!$data['type'] && $field != $this->model->id_field) {
-                $data['type'] = 'text';
-            }
-
-            if (!array_key_exists('title', $data) || $data['title'] === null) {
-                $data['title'] = ucwords(implode(' ', preg_split('/_+/', $field, -1, PREG_SPLIT_NO_EMPTY)));
-            }
-
-            $this->checkSubProp($field, $data);
-
-            if ($data['type'] == 'link' || $data['is_link']) {
-                $data['is_link'] = true;
-                if (!$data['template']) {
-                    $data['template'] = '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
-                }
-            }
-
-            if ($data['type'] == 'image') {
-                if (!$data['max_width']) {
-                    $data['max_width'] = 40;
-                }
-
-                if (!$data['max_height']) {
-                    $data['max_height'] = 30;
-                }
-
-                if (!$data['dir_path']) {
-                    $data['dir_path'] = '/images/';
-                }
-
-                if (!array_key_exists('orderable', $data)) {
-                    $data['orderable'] = false;
-                }
-
-                if (!array_key_exists('searching', $data)) {
-                    $data['searching'] = false;
-                }
-            }
-
-            if ($data['extra']) {
-                $data['orderable'] = false;
-                $data['searching'] = false;
-            }
-
-            if (!array_key_exists('orderable', $data)) {
-                $data['orderable'] = true;
-            }
-
-            if (!array_key_exists('searching', $data)) {
-                $data['searching'] = true;
-            }
-
-            $field = $this->recursiveCreateRelativeFieldName($field, $data);
-
-            $result[$field] = $data;
-        }
-        $listFields = $result;
-        unset($data);
-        if (array_key_exists($this->model->id_field, $listFields)) {
-            if (!array_key_exists('type', $listFields[$this->model->id_field])) {
-                $listFields[$this->model->id_field]['type'] = 'link';
-                $listFields[$this->model->id_field]['template'] = '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
-            }
-            $listFields[$this->model->id_field]['width'] = '60';
+    foreach ($listFields as $field => $data) {
+        if (is_numeric($field) && is_string($data)) {
+            $field = $data;
+            $data = [];
         }
 
-        return $listFields;
+        $data['original_field_name'] = $field;
+
+        if (!$data['type'] && $field != $this->model->id_field) {
+            $data['type'] = 'text';
+        }
+
+        if (!isset($data['title']) || $data['title'] === null) {
+            $data['title'] = ucwords(str_replace('_', ' ', $field));
+        }
+
+        $this->checkSubProp($field, $data);
+
+        if ($data['type'] == 'link' || $data['is_link']) {
+            $data['is_link'] = true;
+            if (!isset($data['template'])) {
+                $data['template'] = '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
+            }
+        }
+
+        if ($data['type'] == 'image') {
+            $data['max_width'] = $data['max_width'] ?? 40;
+            $data['max_height'] = $data['max_height'] ?? 30;
+            $data['dir_path'] = $data['dir_path'] ?? '/images/';
+            $data['orderable'] = $data['orderable'] ?? false;
+            $data['searching'] = $data['searching'] ?? false;
+        }
+
+        if ($data['extra']) {
+            $data['orderable'] = false;
+            $data['searching'] = false;
+        }
+
+        $data['orderable'] = $data['orderable'] ?? true;
+        $data['searching'] = $data['searching'] ?? true;
+
+        $field = $this->recursiveCreateRelativeFieldName($field, $data);
+
+        $result[$field] = $data;
     }
+
+    if (isset($this->model->id_field) && isset($result[$this->model->id_field])) {
+        $result[$this->model->id_field]['type'] = $result[$this->model->id_field]['type'] ?? 'link';
+        $result[$this->model->id_field]['template'] = $result[$this->model->id_field]['template'] ?? '/admin/' . $this->alias . '/edit/%' . $this->model->id_field . '%';
+        $result[$this->model->id_field]['width'] = '60';
+    }
+
+    return $result;
+}
+
 
     protected function getEditFields()
     {
