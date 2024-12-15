@@ -26,7 +26,12 @@ if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
 }
     
 $services = json_decode($servicesStr);
-$generatorClass = $_GET['generatorClass'];
+if (isset($_GET['generatorClass']) && ctype_alnum($_GET['generatorClass'])) {
+    $generatorClass = $_GET['generatorClass'];
+} else {
+    
+    $generatorClass = 'defaultClass';
+}
 $generatorManager = new Amfphp_BackOffice_ClientGenerator_GeneratorManager();
 $generators = $generatorManager->loadGenerators(array('ClientGenerator/Generators'));
 
