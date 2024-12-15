@@ -1,4 +1,5 @@
 <?php
+define('ADMIN_NAMESPACE', 'App\\Admin\\');
 return array(
     'rest_my' => array('/api/my/<controller>(/<id>(/<property>))',
         array(
@@ -28,7 +29,7 @@ return array(
     'admin_error' => array(
         '/admin/error/<id>',
         array(
-            'namespace' => 'App\\Admin\\',
+            'namespace' => ADMIN_NAMESPACE,
             'controller' => 'error',
             'action' => 'view'
         ),
@@ -71,7 +72,7 @@ return array(
 
     'admin_option_value' => array('/admin/option-value(/<action>(/<id>))',
         array(
-            'namespace' => 'App\\Admin\\',
+            'namespace' => ADMIN_NAMESPACE,
             'controller' => 'OptionValue',
             'action' => 'index',
             'force_hyphens' => true
@@ -80,7 +81,7 @@ return array(
 
     'admin_product_option_value' => array('/admin/product-option-value(/<action>(/<id>))',
         array(
-            'namespace' => 'App\\Admin\\',
+            'namespace' => ADMIN_NAMESPACE,
             'controller' => 'ProductOptionValue',
             'action' => 'index',
             'force_hyphens' => true
@@ -95,7 +96,7 @@ return array(
             ),
         ),
         array(
-            'namespace' => 'App\\Admin\\',
+            'namespace' => ADMIN_NAMESPACE,
             'controller' => 'home',
 
             'force_hyphens' => true
@@ -104,7 +105,7 @@ return array(
 
     'admin' => array('/admin(/<controller>(/<action>(/<id>)))',
         array(
-            'namespace' => 'App\\Admin\\',
+            'namespace' => ADMIN_NAMESPACE,
             'controller' => 'home',
             'action' => 'index'
         )
