@@ -498,7 +498,7 @@ BrowserHistory = (function() {
         forwardStack: function() { return forwardStack }, 
         getPlayer: getPlayer, 
         initialize: function(src) {
-            _initialize(src);
+            _initialize();
         }, 
         setURL: function(url) {
             document.location.href = url;
